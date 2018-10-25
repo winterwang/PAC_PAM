@@ -128,7 +128,59 @@ chain <- data.frame(r_pac  = samplesSample("r_pac"),
 #### PLOT THE DENSITY OF THE SAMPLED VALUES
 
 plot(density(chain$OR[1001:102000]), main = "OR chains 1:2 sample: 100000", 
-     ylab = "", xlab = "", col = "red", ylim = c(0, 0.4), xlim = c(6, 200))
+     ylab = "", xlab = "", col = "red", ylim = c(0, 0.5), xlim = c(0, 100))
+
+plot(density(chain$r_pac[1001:102000]), main = "r_pac chains 1:2 sample: 100000", 
+     ylab = "", xlab = "", col = "red", ylim = c(0, 11), xlim = c(0.4, 0.8))
+
+plot(density(chain$r_pam[1001:102000]), main = "r_pac chains 1:2 sample: 100000", 
+     ylab = "", xlab = "", col = "red", ylim = c(0, 30), xlim = c(0.8, 1.1))
+
+
+
+# Model 2 with strong prior that PAC is better ----------------------------
+# Specify the model in BUGS language, but save it as a string in R:
+modelString = "
+# BUGS model specification begins ...
+model {
+        # data model for the Mabe RCT data 
+        # For PAC arm 
+          Y_pac ~ dbin(r_pac, X_pac) 
+# Y_pac is the number of success in treatment PAC    
+# X_pac is the number of patients in treatment PAC
+# r_pac is the probability of success rate in treatment PAC
+logit(r_pac) <- lr_pac
+# lr_pac is the log(odds) of success in treatment PAC
+
+# For PAM arm
+Y_pam ~ dbin(r_pam, X_pam)
+# Y_pam is the number of success in treatment PAM    
+# X_pam is the number of patients in treatment PAM
+# r_pam is the probability of success rate in treatment PAM
+logit(r_pam) <- lr_pam
+# lr_pam is the log(odds) of success in treatment PAM
+
+# calculate odds ratio for PAM vs. PAC
+lr_pam <- lr_pac + lor
+# lor is the log(odds ratio, OR) comparing PAM against PAC
+OR <- exp(lor)
+# convert lor back to OR
+# critical values calculation 
+P.pam.better <- step(OR - 1) 
+# 1 if or >= 1, which favors PAM treatment
+# 0 if or < 1, which favors PAC treatment
+
+# Priors 
+lr_pac ~ dnorm(0, 0.3)  # vague priors for log success(%) in PAC arm equal 
+lor    ~ dnorm(0, 0.33) # vague priors for log(OR)
+# this is a neutral normal prior centred on no effect; 
+# where 95% of the prior OR values lays between 1/30, and 30
+}
+# ... BUGS model specification ends.
+" # close quote to end modelString
+
+
+
 
 # call R2Openbugs ---------------------------------------------------------
 
