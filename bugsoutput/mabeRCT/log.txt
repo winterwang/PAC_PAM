@@ -1,0 +1,26 @@
+OpenBUGS version 3.2.3 rev 1012
+model is syntactically correct
+data loaded
+multiple definitions of node r_pac
+model must have been compiled but not updated to be able to change RN generator
+model must be compiled before initial values loaded
+model must be compiled before initial values loaded
+model must be compiled before generating initial values
+model must be initialized before updating
+model must be initialized before monitors used
+model must be initialized before monitors used
+model must be initialized before monitors used
+model must be initialized before monitors used
+model must be initialized before monitors used
+model must be initialized before monitors used
+model must be initialized before monitors used
+model must be initialized before monitors used
+model must be initialized before monitors used
+model must be initialized before monitors used
+model must be initialized before monitors used
+model must be initialized before monitors used
+model must be initialized before DIC can be monitored
+model must be initialized before updating
+model must be initialized before monitors used
+model must be initialized before monitors used
+DIC monitor not set
